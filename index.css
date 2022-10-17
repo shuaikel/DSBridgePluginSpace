@@ -1,0 +1,108 @@
+
+.headerTitle {
+	height: 50px;
+	font-weight: 800;
+	font-size: 18px;
+	color: #333333;
+	text-indent: 14px;
+}
+
+.uaContainer {
+  margin: 0 1em;
+  font-size: 13px;
+  word-wrap: break-word;
+  border: 1px mediumseagreen solid;
+  line-height: 24px;
+  padding:10px;
+}
+
+.urlTestContainer{
+  margin: 1rem 1em;
+  font-size: 13px;
+  word-wrap: break-word;
+  border: 1px mediumseagreen solid;
+  line-height: 24px;
+  padding:10px;
+  display: flex;
+}
+
+.urlTF{
+    width: 80%;
+    height: 44px;
+}
+
+.submitUrlTF{
+    width: 20%;
+    height: 44px;
+}
+
+.basedsbridge{
+	height: 50px;
+	font-weight: 800;
+	font-size: 18px;
+	color: #333333;
+	text-indent: 14px;
+	margin-top: 20px;
+}
+
+.sectionHeader {
+	height: 35px;
+	font-weight: 800;
+	font-size: 18px;
+	color: #333333;
+	text-indent: 14px;
+	margin-top: 20px;
+}
+
+.pluginCell {
+	height: 44px;
+	background-color: pink;
+	display: flex;
+	align-items: center;
+	text-indent: 14px;
+	font: 16px normal;
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.pluginCellNomarginBottom {
+	margin-bottom: 0px;
+}
+
+.pluginExcuteBtn {
+	background-color: inherit;
+	border: none;
+	font: 16px normal;
+	font-weight: 600;
+	padding: 0;
+	text-indent: 14px;
+	width: 100%;
+	text-align: start;
+}
+
+.pluginTextarea {
+  font-size: 18px;
+  word-wrap: break-word;
+  border: 1px mediumseagreen solid;
+  line-height: 24px;
+  height: 150px;
+  width: 100%;
+  padding:10px;
+}
+
+.debugExcuteBtn{
+	text-align: center;
+	background-color: cornflowerblue;
+  	color: white;
+  	line-height: 44px;
+}
+
+.aMax {
+    width: 100%;
+    display: inline-block;
+}
+
+a:hover{
+    text-decoration: none;
+}
+

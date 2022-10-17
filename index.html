@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>dsbridge插件调试页</title>
+        <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no">
+                <!-- 引入 Bootstrap -->
+                <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+                    <link rel="stylesheet" type="text/css" href="./index.css">
+                        <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+                        <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+                        <script type="text/javascript">
+                            var ua = window.navigator.userAgent
+                            
+                            function domLoad(argument) {
+                                // body...
+                                //  获取UA相关数据
+                                var uaDisplayD = document.getElementById('uaDisplayD')
+                                uaDisplayD.innerHTML = 'UA :' + window.navigator.userAgent + '<br>' + 'document.readyState: ' + document.readyState
+                                
+                                // apnsToken
+                                 if (window.UniqueJSBridge != undefined) {
+                                      var apnsToken =  window.UniqueJSBridge.call('dataStorage.getData',{'type':'common','key':'apnsToken'},(rsp)=>{
+                                        let json = JSON.parse(rsp)
+                                        let apnsHeader = document.getElementById("pushTokenID")
+                                        apnsHeader.innerHTML = "用户DeviceToken:  " + json.data.apnsToken
+                                      })
+                                 }
+                                
+                                
+                                // 根据数据源动态渲染
+                                var list = [{
+                                    'header': 'DSBridge基础插件',
+                                    'sectionItemConfig': [{
+                                        "area": "DSBridge数据存储插件",
+                                        "pluginName": "dataStorage",
+                                        "child": [{
+                                            'name': '添加或更新数据',
+                                            'method': 'addOrUpdateData',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('dataStorage.addOrUpdateData', \n{type: 'common',data: {'a':'123'}},\n function success(result){console.log(result);});",
+                                        },
+                                                  {
+                                            'name': '移除数据',
+                                            'method': 'removeData',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('dataStorage.removeData', \n{type:'common','key':'a'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '获取数据',
+                                            'method': 'getData',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('dataStorage.getData', \n{type:'common','key':'a'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  ]
+                                    },
+                                                          {
+                                        "area": "设备信息插件",
+                                        "pluginName": "device",
+                                        "child": [{
+                                            'name': '获取设备信息',
+                                            'method': 'getDeviceInfo',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('device.getDeviceInfo', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '判断是否安装app',
+                                            'method': "phoneIsExistApp",
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('device.phoneIsExistApp', \n{'appNames':['weixin','ailpay']}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '获取定位信息',
+                                            'method': 'getLocation',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('device.getLocation', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '扫码',
+                                            'method': 'scan',
+                                            'defaultCallFuncStr': "window.UniqueJSBridge.call('device.scan',\n{'imageType':'http',\n'imageData':'https://imgcdn.chuxingyouhui.com/knc/pro/mng/20210520/9b3bb99983074d5cb46db90a7420d880.jpeg'},\n(rsp)=>{console.log(rsp)});"
+                                        },
+                                                  {
+                                            'name': '获取App信息',
+                                            'method': 'getAppInfo',
+                                            'defaultCallFuncStr': "window.UniqueJSBridge.call('device.getAppInfo',\n{},\n(rsp)=>{alert(rsp)});"
+                                        }
+                                                  ]
+                                    },
+                                                          
+                                                          {
+                                        "area": "权限插件",
+                                        "pluginName": "permission",
+                                        "child": [{
+                                            'name': '查看授权状态',
+                                            'method': 'native_hasPermissions',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('permission.native_hasPermissions', \n{'permissions':['Location','Photo','Microphone','Camera','Push','Media']}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '请求授权',
+                                            'method': "native_requestPermissions",
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('permission.native_requestPermissions', \n{'permission':'Camera'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '跳转设置页面',
+                                            'method': 'settings',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('permission.settings', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  
+                                                  ]
+                                    },
+                                                          
+                                                          {
+                                        "area": "页面导航插件",
+                                        "pluginName": "jump",
+                                        "child": [{
+                                            'name': '返回tab一级界面',
+                                            'method': 'backToTab',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('jump.backToTab', \n{'tabIndex':'1'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '新开页面',
+                                            'method': "openWindow",
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('jump.openWindow', \n{'url':'https://www.baidu.com'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '推出控制器',
+                                            'method': 'popWindow',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('jump.popWindow', \n{'animation':false}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '跳到指定原生控制器',
+                                            'method': 'popTo',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('jump.popTo', \n{'animation':false,'index':1,'jsFunName':''}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '显示或者隐藏原生导航栏',
+                                            'method' : 'updateNativeNavBar',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('jump.updateNativeNavBar', \n{'hidden':false}, \nfunction success(result) {console.log(result);});"
+                                        }
+                                                  ]
+                                    },
+                                                          
+                                                          {
+                                        "area": "App信息相关",
+                                        "pluginName": "app",
+                                        "child": [{
+                                            'name': '获取app版本信息',
+                                            'method': 'web_getAppVersion',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.web_getAppVersion', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '读取剪贴板内容',
+                                            'method': "getNativeClipboardText",
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.getNativeClipboardText', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '设置剪贴板内容',
+                                            'method': 'setNativeClipboardText',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.setNativeClipboardText', \n{'text':'设置剪贴板内容'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '设置状态栏颜色',
+                                            'method': 'web_setStatusBarStyle',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.web_setStatusBarStyle', \n{'style':'dark'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '设置标题',
+                                            'method': 'setTitle',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.setTitle', \n{'title':'设置标题'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '标题设置右边的按钮属性',
+                                            'method': 'setOptionMenu',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.setOptionMenu', \n{'btnLists':[{'icon':'http://t14.baidu.com/it/u=2967276152,771148871&fm=224&app=112&f=JPEG?w=100&h=100&s=A392652374B4D382AF5988D60000C0A2','text':'扫一扫','color':'#333333'},{icon:'saoyisao','text':'扫一扫',color:'#666666'}]}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '显示系统导航栏右侧按钮',
+                                            'method': 'showOptionMenu',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.showOptionMenu', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '隐藏系统导航栏右侧按钮',
+                                            'method': 'hideOptionMenu',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.hideOptionMenu', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '自定义导航栏右侧按钮单个',
+                                            'method': 'web_setNavigationRightBarButton',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.web_setNavigationRightBarButton', \n{'text':'右侧按钮'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '自定义右侧导航按钮点击事件',
+                                            'method': 'rightBarButtonClickAction',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.rightBarButtonClickAction', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '退出应用',
+                                            'method': 'exitApp',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.exitApp', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '系统浏览器打开',
+                                            'method': 'browserOpen',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.browserOpen', \n{'url':'https://www.baidu.com'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '自定义界面背景颜色',
+                                            'method': 'set_navbarBackGroundColor',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.set_navbarBackGroundColor', \n{'color':'#666666'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': 'webview是否支持bounces',
+                                            'method': 'set_scrollBounces',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('app.set_scrollBounces', \n{'bounces':'0'}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  ]
+                                    }
+                                                          ]
+                                },
+                                            {
+                                    'header': '盲盒业务插件',
+                                    'sectionItemConfig': [{
+                                        "area": "获取用户信息插件",
+                                        "pluginName": "userState",
+                                        "child": [{
+                                            'name': '添加或更新数据',
+                                            'method': 'getUserData',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('userState.getUserData', \n{},\n function success(result){console.log(result);});",
+                                        },
+                                                  {
+                                            'name': 'balanceChange',
+                                            'method': 'balanceChange',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('userState.balanceChange', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '拉起登录插件',
+                                            'method': 'login',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('userState.login', \n{doPre:'clearUserStatus',}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  {
+                                            'name': '登出插件',
+                                            'method': 'logout',
+                                            'defaultCallFuncStr': "UniqueJSBridge.call('userState.logout', \n{}, \nfunction success(result) {console.log(result);});"
+                                        },
+                                                  ]
+                                    },
+                                                          {
+                                        "area": "safari插件",
+                                        "pluginName": "safari",
+                                        "child": [{
+                                            'name': '内置safariVC打开',
+                                            'method': 'openBySafari',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('safari.openBySafari', \n{'url':'https://www.baidu.com'},\n function success(result){console.log(result);});",
+                                        }]
+                                    },
+                                                          {
+                                        "area": "支付插件",
+                                        "pluginName": "pay",
+                                        "child": [{
+                                            'name': '原生支付',
+                                            'method': 'nativePay',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('pay.nativePay', \n{'url':'参数自填'},\n function success(result){console.log(result);});",
+                                        }]
+                                    }
+                                                          ]
+                                },
+                                            {
+                                    'header': '商祺业务插件',
+                                    'sectionItemConfig': [{
+                                        "area": "媒体插件",
+                                        "pluginName": "media",
+                                        "child": [{
+                                            'name': '拍照及选择图片',
+                                            'method': 'chooseImg',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('media.chooseImg', \n{'count':1},\n function success(result){console.log(result);});",
+                                        },{
+                                            'name': '保存网络资源插件',
+                                            'method': 'saveResources',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('media.saveResources', \n{'data':[{'url':'https://img2.baidu.com/it/u=1814268193,3619863984&fm=253&fmt=auto&app=138&f=JPEG?w=632&h=500'}]},\n function success(result){console.log(result);});",
+                                        }
+                                                  ]
+                                    },
+                                                          {
+                                        "area": "用户信息插件",
+                                        "pluginName": "userState",
+                                        "child": [{
+                                            'name': '拉起登录插件',
+                                            'method': 'logout',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('userState.logout', \n{},\n function success(result){console.log(result);});",
+                                        }
+                                                  ]
+                                    },
+                                                          {
+                                        "area": "webHistory插件",
+                                        "pluginName": "webHistory",
+                                        "child": [{
+                                            'name': 'webHistory操作BF栈插件',
+                                            'method': 'webHistoryBack',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('webHistory.webHistoryBack', \n{index:0, step:1}, \n functionsuccess (result) {console.log(result);});",
+                                        }
+                                                  ]
+                                    },
+                                                          {
+                                        "area": "web打开支付宝或者微信小程序插件",
+                                        "pluginName": "miniProgram",
+                                        "child": [{
+                                            'name': 'web打开小程序插件',
+                                            'method': 'openMiniProgram',
+                                            "defaultCallFuncStr": "UniqueJSBridge.call('miniProgram.openMiniProgram',\n { platform:0, path:'', urlStr:'', miniProgramType:0},\n functionsuccess (result) { console.log(result); });",
+                                        }
+                                                  ]
+                                    },
+                                                          ]
+                                }
+                                            
+                                            ]
+                                            
+                                            
+                                            for (var i = 0; i < list.length; i++) {
+                                                
+                                                var sectionConfig = list[i]
+                                                
+                                                // console.log('config list count: ' + JSON.stringify(sectionConfig) + 'count:'+ list.length);
+                                                //
+                                                var iIndex = (i + 2)
+                                                var headerTitle = iIndex + '. ' + sectionConfig.header
+                                                
+                                                var supParent = document.getElementById("accordion")
+                                                
+                                                // 头部
+                                                var sectionHeader = document.createElement("div");
+                                                sectionHeader.className = "sectionHeader"
+                                                sectionHeader.innerHTML = headerTitle
+                                                supParent.appendChild(sectionHeader)
+                                                
+                                                // 配置
+                                                var sectionItemConfigLists = sectionConfig.sectionItemConfig
+                                                
+                                                for (var j = 0; j < sectionItemConfigLists.length; j++) {
+                                                    
+                                                    var sectionItemConfig = sectionItemConfigLists[j]
+                                                    
+                                                    console.log('sectionItemConfigLists info :' + sectionItemConfigLists.length + 'config :' + JSON.stringify(sectionItemConfig));
+                                                    
+                                                    // panel
+                                                    var panel = document.createElement("div");
+                                                    panel.className = "panel panel-default"
+                                                    supParent.appendChild(panel)
+                                                    
+                                                    // panelheading
+                                                    var panelheading = document.createElement("div");
+                                                    panelheading.className = "panel-heading"
+                                                    panel.appendChild(panelheading)
+                                                    
+                                                    
+                                                    // panel-title
+                                                    var panelTitle = document.createElement("h4");
+                                                    panelTitle.className = "panel-title"
+                                                    panelheading.appendChild(panelTitle)
+                                                    
+                                                    // a
+                                                    var panelTitleAElement = document.createElement("a");
+                                                    panelTitleAElement.setAttribute("data-toggle", "collapse");
+                                                    panelTitleAElement.setAttribute("data-parent", "#accordion");
+                                                    panelTitleAElement.setAttribute("class", "aMax");
+                                                    var jIndex = (j + 1)
+                                                    var hrefValue = '#collapse' + i + 'i' + jIndex
+                                                    panelTitleAElement.setAttribute("href", hrefValue);
+                                                    panelTitleAElement.innerHTML = iIndex + '.' + jIndex + ' ' + sectionItemConfig.area + '(' + sectionItemConfig.pluginName + ')'
+                                                    panelTitle.appendChild(panelTitleAElement)
+                                                    
+                                                    // item
+                                                    var panelCollapseID = 'collapse' + i + 'i' + jIndex
+                                                    var panelCollapse = document.createElement("div");
+                                                    panelCollapse.className = "panel-collapse collapse"
+                                                    panelCollapse.setAttribute("id", panelCollapseID);
+                                                    panel.appendChild(panelCollapse)
+                                                    
+                                                    //
+                                                    var panelBody = document.createElement("div");
+                                                    panelBody.className = "panel-body"
+                                                    panelCollapse.appendChild(panelBody)
+                                                    
+                                                    //
+                                                    var itemList = sectionItemConfig.child
+                                                    
+                                                    console.log('itemList info :' + itemList);
+                                                    
+                                                    for (var k = 0; k < itemList.length; k++) {
+                                                        
+                                                        var pluginCellContain = document.createElement("div");
+                                                        panelBody.appendChild(pluginCellContain)
+                                                        
+                                                        
+                                                        let item = itemList[k]
+                                                        console.log('第三层循序：'+ JSON.stringify(item))
+                                                        var pluginCell = document.createElement("div");
+                                                        pluginCell.className = "pluginCell"
+                                                        var kIndex = (k + 1)
+                                                        
+                                                        pluginCell.innerHTML = iIndex + '.' + jIndex + '.' + kIndex + ' ' + item.name + '(' + item.method + ')'
+                                                        let pluginMethod = item.defaultCallFuncStr;
+                                                        
+                                                        let pluginTextareaContainID = 'pluginTextareaContain'+'i' + iIndex + 'j' + jIndex + 'k' + kIndex
+                                                        let textareaID =  pluginTextareaContainID + 'k' + kIndex
+                                                        
+                                                        pluginCell.onclick = function(data) {
+                                                            // body...
+                                                            // console.log('pluginCell click Event' + JSON.stringify(item));
+                                                            // 取textarea 标签
+                                                            document.getElementById(textareaID).value = item.defaultCallFuncStr
+                                                            
+                                                        }
+                                                        
+                                                        console.log('pluginTextareaContainID:' + pluginTextareaContainID)
+                                                        pluginCell.setAttribute("data-toggle", "collapse");
+                                                        
+                                                        pluginCell.setAttribute("data-target", '#'+pluginTextareaContainID);
+                                                        pluginCellContain.appendChild(pluginCell)
+                                                        
+                                                        
+                                                        // textareasup
+                                                        let pluginTextareContainD = document.createElement("div");
+                                                        pluginTextareContainD.setAttribute("id", pluginTextareaContainID);
+                                                        pluginTextareContainD.className = 'collapse'
+                                                        pluginCellContain.appendChild(pluginTextareContainD)
+                                                        
+                                                        // textarea
+                                                        let pluginTextarea = document.createElement("textarea");
+                                                        
+                                                        pluginTextarea.setAttribute("id", textareaID);
+                                                        pluginTextarea.className = 'pluginTextarea'
+                                                        pluginTextareContainD.appendChild(pluginTextarea)
+                                                        
+                                                        // 执行按钮
+                                                        let debugExcuteBtn = document.createElement("div");
+                                                        debugExcuteBtn.className = 'debugExcuteBtn'
+                                                        debugExcuteBtn.innerHTML = "点击执行插件函数"
+                                                        debugExcuteBtn.onclick = function(argument) {
+                                                            // body...
+                                                            // console.log('debugExcuteBtn click Event' + JSON.stringify(item));
+                                                            if (window.UniqueJSBridge == undefined) {
+                                                                alert('UniqueJSBridge 对象为空');
+                                                                return
+                                                            }
+                                                            let temp = "#" + textareaID
+                                                            eval($(temp).val());
+                                                        }
+                                                        pluginTextareContainD.appendChild(debugExcuteBtn)
+                                                        
+                                                    }
+                                                }
+                                            }
+                                            
+                                            
+                            }
+                        </script>
+                        <script type="text/javascript">
+                            function jumpUrl(argument) {
+                                // body...
+                                var url = document.getElementById('submitUrlTFD').value
+                                // 新开页面
+                                UniqueJSBridge.call('jump.openWindow', {'url': url}, function success(result) {});
+
+                            }
+                        </script>
+                        
+                        
+                        <script>
+                            document.addEventListener('visibilitychange', function () {
+                              // 用户离开了当前页面
+                              if (document.visibilityState === 'hidden') {
+                                  console.log("页面不可见");
+                              }
+                             
+                              // 用户打开或回到页面
+                              if (document.visibilityState === 'visible') {
+                                  console.log("页面可见");
+                              }
+                              
+                            });
+
+                        </script>
+    </head>
+    
+    <body onload="domLoad()">
+    	<div class="uaContainer" id="pushTokenID"></div>
+        <header class="sectionHeader">1.页面载入状态及UA</header>
+        <div class="uaContainer" id="uaDisplayD"></div>
+        <div class="urlTestContainer" id="urlContainerD">
+            <input onpaste="return true" placeholder="请输入跳转链接" class="urlTF" id = "submitUrlTFD" />
+            <input type="submit" class="submitUrlTF" onclick="jumpUrl()">
+        </div>
+        <div class="panel-group" id="accordion">
+        </div>
+    </body>
+    
+</html>
